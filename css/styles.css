@@ -1,0 +1,178 @@
+/* Colors used
+Text color:         #1c4154
+Primary background color:   blanchedalmond
+Secondary backgroundcolor:  #cee4d8
+Primary text color:         #071f35
+Secondary text color:       #24496b
+Reserve color 1:            #446d92
+Reserve color 2:            #98b1c8
+Reserve color 3:            #eff6ff
+*/
+:root {
+    --primary-color: #357b70;
+    --secondary-color: #e0b354;
+    --dark-grey: #2b2b2b;
+    --primary-background-color:blanchedalmond;
+    --secondary-background-color:#cee4d8;
+    --default-text-color: white;
+    --link-color: #24496b;
+    --link-visited-color: purple;
+    --link-active-color: red;
+    --transp-black: rgba(0, 0, 0, 0.3);
+    --default-font-family: "Lato", sans-serif;
+    --default-font-size: 18px;
+    --small-font-size: 12px;
+    --default-h1-size: 36px;
+    --default-h2-size: 30px;
+    --default-h3-size: 24px;
+    --default-h4-size: 18px;
+    --default-line-height: 1.8;
+    --regular-font-weight: 400;
+    --bold-font-weight: 700;
+    --black-font-weight: 900;
+    --small-padding: 10px;
+    --medium-padding: 20px;
+    --large-padding: 30px;
+    --default-margin: 50px;
+    --small-margin: 15px;
+    --small-grid-gap: 10px;
+    --medium-grid-gap: 20px;
+    --large-grig-gap: 30px;
+    --small-phone-screen: 460px;
+    --large-phone-screen: 512px;
+    --small-tablet-screen: 900px;
+    --large-tablet-screen: 1200px;
+    --laptop-screen: 1800px;
+    --opacity-semi-transparent: 0.5;
+    --opacity-slight-transparent: 0.8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color:var(--primary-background-color);
+    /* .lato-regular */
+    font-family: var(--default-font-family);
+    font-weight: var(--regular-font-weight);
+    font-style: normal;
+    font-size: var(--default-font-size);
+    line-height: var(--default-line-height);
+}
+
+.page-header {
+    display: flex;
+    width: 100%;
+    padding: var(--medium-padding);
+}
+.page-header__item {
+    flex: 0 1 100px;
+}
+.page-header__item:last-child {
+    flex-grow: 1;
+    text-align: right;
+}
+.navigation-list {
+    list-style-type: none;
+}
+.navigation-list li {
+    display: inline-block;
+    margin-left: var(--small-margin);
+}
+.navigation-list__item--active {
+  text-decoration: none;
+}
+
+.page-footer {
+    clear: both;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin-top: var(--default-margin);
+    margin-bottom: var(--default-margin);
+}
+
+h1 {
+    font-size: var(--default-h1-size);
+    font-weight: var(--bold-font-weight);
+}
+h2 {
+    font-size: var(--default-h2-size);
+    font-weight: var(--bold-font-weight);
+}
+h3 {
+    font-size: var(--default-h3-size);
+    font-weight: var(--bold-font-weight);
+}
+
+a {
+    color: var(--link-color);
+}
+a:visited {
+    /* visited link */
+    color: var(--link-visited-color);
+}
+a:hover, a:focus {
+    /* No underlining when hovering over a link */
+    text-decoration: none;
+}
+a:active {
+    /* selected link */
+    color: var(--link-active-color);
+}
+
+button {
+    /* overwrites browser defaults and resets the border */
+    border: none;
+    /* takes the font from the outer container */
+    font-family: inherit;
+    /* styles the background color, font color, and text decoration (underline, etc.) of the button */
+    background-color: var(--primary-color);
+    color: var(--default-text-color);
+    text-decoration: none;
+    /*adds spacing to the button (this will be discussed more in-depth later) */
+    padding: var(--small-padding);
+    border-radius: 3px;
+    /* gives the button a bottom border with a width of 2px, a type of solid, and a color in RGBA format */
+    border-bottom: 2px solid var(--transp-black);
+}
+button:hover, 
+button:focus {
+  /* lets the mouse appear as a hand when hovering over the button */
+  cursor: pointer;
+  /* reduces the opacity of the button to 80% */
+  opacity: var(--opacity-slight-transparent);
+}
+
+.button__link {
+    display: inline-block; /* Makes it behave like a block but allows other elements on the same line */
+    flex: 0 0 auto;   /* Keeps button as wide as text */
+    align-self: center; /* Keeps the block in center along secondary axis, here it is horizontal */
+    padding: var(--small-padding) var(--medium-padding); /* Adjust padding for button size */
+    background-color: var(--primary-color); /* Button background color */
+    color: var(--default-text-color); /* Text color */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline from link */
+    border: none; /* Remove default border */
+    border-radius: 3px; /* Rounded corners */
+    border-bottom: 2px solid var(--transp-black);
+    cursor: pointer; /* Indicate it's clickable when hovering over the button*/
+    transition-property: opacity 0.3s ease;  /* Smooth transition on hover */
+}
+.button__link:link, 
+.button__link:visited {
+    color: var(--default-text-color); /* Keeps text color white for link  */
+}
+.button__link:hover,
+.button__link:focus {
+    /* reduces the opacity of the button to 80% */
+    opacity: var(--opacity-slight-transparent);
+    color: var(--default-text-color); /* Keeps text color white for link  */
+}
+.button__link:active {
+    opacity: var(--opacity-semi-transparent); /* Even more transparent on click */
+    color: var(--default-text-color); /* Keeps text color white for link  */
+    transform: translateY(1px); /* Slight press effect */
+}
+
