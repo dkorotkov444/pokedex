@@ -176,3 +176,10 @@ button:focus {
     transform: translateY(1px); /* Slight press effect */
 }
 
+.pokelist {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    max-width: var(--large-tablet-screen);
+    margin: var(--default-margin) auto;
+}
