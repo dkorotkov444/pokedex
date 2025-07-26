@@ -5,11 +5,31 @@ Pokedex is a simple web application for presenting information from Pokemon data
 
 // Define Pokemon repository
 let pokemonRepository = (function(){
-    // Defines list of Pokemons as blank array
+    // Defines list of Pokémons as blank array
     let pokemonList = [];    
-    // Adds one pokemon et the end of the array/list
+    // Adds one Pokémon at the end of the array/list
     function add(pokemon){
-            pokemonList.push(pokemon);
+        if ((typeof(pokemon) !== "object") || (pokemon === null)){
+            // Display and log error message
+            console.error('Only objects can be added to pokemonList!');
+            alert('Only objects can be added to pokemonList!');
+            return; // Exit function if type validation failed
+        };
+        // Define standard key set for pokemon
+        let pokemonKeys = ['name','height','types','abilities'];
+        // Read key set of the function argument
+        let actualKeys = Object.keys(pokemon);
+
+        if (actualKeys.lenght !== pokemonKeys.length ||             // Compares key arrays length
+            !actualKeys.every(key => pokemonKeys.includes(key))){   // Checks if every argument key is in expected keys
+                // Display and log error message
+                console.error('Invalid Pokémon object: Missing or incorrect keys.');
+                alert('Add object with 4 keys (name, height, types, abilities)');
+                return; // Exit function if keys validation failed
+        }
+
+        // If all validations succeeded, add pokemon to the list
+        pokemonList.push(pokemon);
     };
     // Retrieves complete pokemonList array
     function getAll(){
@@ -35,7 +55,7 @@ pikachu =
     {   name: 'Pikachu',
         height: 0.40,
         types: ['electric'],
-        abilities: ['static', 'lightningrod']
+        abilities: ['static', 'lightningrod'],
     };
 // Define Raichu
 raichu =
