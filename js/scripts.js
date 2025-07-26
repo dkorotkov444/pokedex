@@ -46,10 +46,10 @@ pokemonList = [
     }
 ];
 
-// Output the list of Pokemons on the homepage using 'for' loop
-for (let i = 0; i < pokemonList.length; i++) {          // document.write() is deprecated
-    let bigText = pokemonList[i].height > 2?' - Wow, that\'s a big one!':'';    // Ternary 'if'
-    document.writeln (`${i+1}. ${pokemonList[i].name} 
-        (height: ${pokemonList[i].height};
-        types: ${pokemonList[i].types.join(', ')}) ${bigText}<br>`);  // Use 'join' to put space after comma between array elements
-}
+// Output the list of Pokemons on the homepage using forEach() loop
+pokemonList.forEach (function(pokemon, i) {
+    let bigText = pokemon.height > 2?' - Wow, that\'s a big one!':'';   // Ternary 'if'
+    document.writeln (`${i+1}. ${pokemon.name} 
+        (height: ${pokemon.height}; 
+        types: ${pokemon.types.join(', ')}) ${bigText}<br>`);  // Use 'join' to put space after comma between array elements    
+})
