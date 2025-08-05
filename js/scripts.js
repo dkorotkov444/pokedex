@@ -1,10 +1,10 @@
 /* 
 JavaScript code for Pokedex
-Pokedex is a simple web application for presenting information from Pokemon database.
+Pokedex is a simple web application for presenting information from Pokémon database.
 */
 
 let pokemonRepository = (function(){
-    // Defines Pokemon repository and its methods
+    // Defines Pokémon repository and its methods
     // Define list of Pokémons as blank array
     let pokemonList = [];    
 
@@ -31,7 +31,7 @@ let pokemonRepository = (function(){
                 return; // Exit function if keys validation failed
         }
 
-        // If all validations succeeded, add pokemon to the list
+        // If all validations succeeded, add Pokémon to the list
         pokemonList.push(pokemon);
     };
     
@@ -50,74 +50,69 @@ let pokemonRepository = (function(){
    
     return {
         add: add,       //  undefined
-        getAll: getAll, //  compele list of Pokemons
-        getOne: getOne  //  one Pokemon with specified name or undefined
+        getAll: getAll, //  compele list of Pokémons
+        getOne: getOne  //  one Pokémon with specified name or undefined
     }
 })();   // End of IIFE pokemonrepository
 
-// Define particular Pokemons as objects with 4 keys: 
+// Define particular Pokémons as objects with 4 keys: 
 // name (string), height in meter (number), types (array of strings), abilities (array of strings).
 
-// Define Pikachu
-pikachu =
+let pokemonEntry = [
     {   name: 'Pikachu',
         height: 0.40,
         types: ['electric'],
         abilities: ['static', 'lightningrod'],
-    };
-// Define Raichu
-raichu =
+    },
     {   name: 'Raichu',
         height: 0.80,
         types: ['electric'],
         abilities: ['static', 'lightningrod']
-    };
-// Define Wartortle
-wartortle =
+    },
     {   name: 'Wartortle',
         height: 1.00,
         types: ['water'],
         abilities: ['rain-dish', 'torrent']
-    };
-// Define Kangaskhan
-kangaskhan =
+    },
     {   name: 'Kangaskhan',
         height: 2.20,
         types: ['normal'],
         abilities: ['inner-focus', 'early-bird', 'scrappy']
-    };
-// Define Sandshrew
-sandshrew =
+    },
     {   name: 'Sandshrew',
         height: 0.60,
         types: ['ground'],
         abilities: ['sand-veil', 'sand-rush']
-    };
-// Define Gloom
-gloom =
+    },
     {   name: 'Gloom',
         height: 0.60,
         types: ['grass', 'poison'],
         abilities: ['stench', 'chlorophyll']
-    };
+    }
+]
 
-// Add pokemons to list
-pokemonRepository.add(pikachu);
-pokemonRepository.add(kangaskhan);
-pokemonRepository.add(gloom);
-pokemonRepository.add(raichu);
-pokemonRepository.add(wartortle);
-pokemonRepository.add(sandshrew);
+// Add pokemons to repository in a for cycle over pokemonEntry array
+for (let i = 0; i < pokemonEntry.length; i++) {
+    pokemonRepository.add(pokemonEntry[i]);
+}
 
-// Output the list of Pokemons on the homepage using forEach() loop
+// Output the list of Pokémons on the homepage using forEach() loop
+let pokemonRoster = document.querySelector('.pokemon-list');
 pokemonRepository.getAll().forEach (function(pokemon, i) {
-    let bigText = pokemon.height > 2?' - Wow, that\'s a big one!':'';   // Ternary 'if'
-    document.writeln (`${i+1}. ${pokemon.name} 
-        (height: ${pokemon.height}; 
-        types: ${pokemon.types.join(', ')}) ${bigText}<br>`);  // Use 'join' to put space after comma between array elements    
+//    let bigText = pokemon.height > 2?' - Wow, that\'s a big one!':'';   // Ternary 'if'
+//        document.writeln (`${i+1}. ${pokemon.name} 
+//        (height: ${pokemon.height}; 
+//        types: ${pokemon.types.join(', ')}) ${bigText}<br>`);  // Use 'join' to put space after comma between array elements    
+    let listItem = document.createElement('li');
+    let button = document.createElement('button');
+    button.classList.add('button__pokemon');
+    button.innerText = `${pokemon.name}`;
+    listItem.appendChild(button);
+    pokemonRoster.appendChild(listItem)
 });
 
-// Find one Pokemon by the name entered by user (must come after Pokemon list is created)
+// Find one Pokémon by the name entered by user (must come after Pokémon list is created)
+/*
 let wanted = prompt('Find Pokémon called: ');
 let wantedPokemon = pokemonRepository.getOne(wanted);
 if (wantedPokemon) { // Check if a Pokémon was actually found
@@ -125,3 +120,4 @@ if (wantedPokemon) { // Check if a Pokémon was actually found
 } else {
     document.writeln(`<br>Pokémon ${wanted} not found.<br>`);
 }
+*/

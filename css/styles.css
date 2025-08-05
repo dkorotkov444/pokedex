@@ -122,7 +122,11 @@ a:active {
     color: var(--link-active-color);
 }
 
-button {
+.pokemon-list {
+    list-style-type: none;
+}
+
+.button__pokemon {
     /* overwrites browser defaults and resets the border */
     border: none;
     /* takes the font from the outer container */
@@ -137,8 +141,8 @@ button {
     /* gives the button a bottom border with a width of 2px, a type of solid, and a color in RGBA format */
     border-bottom: 2px solid var(--transp-black);
 }
-button:hover, 
-button:focus {
+.button__pokemon:hover, 
+.button__pokemon:focus {
   /* lets the mouse appear as a hand when hovering over the button */
   cursor: pointer;
   /* reduces the opacity of the button to 80% */
