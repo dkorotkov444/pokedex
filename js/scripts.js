@@ -48,10 +48,20 @@ let pokemonRepository = (function(){
         return foundPokemon;   // Return an object with specified name if found, undefined otherwise
     }
    
+    function addListItem(pokemon, container){
+        let listItem = document.createElement('li');
+        let button = document.createElement('button');
+        button.classList.add('button__pokemon');
+        button.innerText = pokemon.name;
+        listItem.appendChild(button);
+        container.appendChild(listItem);
+    }
+
     return {
-        add: add,       //  undefined
-        getAll: getAll, //  compele list of Pokémons
-        getOne: getOne  //  one Pokémon with specified name or undefined
+        add: add,                   //  undefined
+        getAll: getAll,             //  returns compele list of Pokémons
+        getOne: getOne,             //  returns one Pokémon with specified name or undefined
+        addListItem: addListItem    //  undefined
     }
 })();   // End of IIFE pokemonrepository
 
@@ -96,19 +106,11 @@ for (let i = 0; i < pokemonEntry.length; i++) {
     pokemonRepository.add(pokemonEntry[i]);
 }
 
-// Output the list of Pokémons on the homepage using forEach() loop
+// Define container element where to attach a list of Pokémons, only once
 let pokemonRoster = document.querySelector('.pokemon-list');
-pokemonRepository.getAll().forEach (function(pokemon, i) {
-//    let bigText = pokemon.height > 2?' - Wow, that\'s a big one!':'';   // Ternary 'if'
-//        document.writeln (`${i+1}. ${pokemon.name} 
-//        (height: ${pokemon.height}; 
-//        types: ${pokemon.types.join(', ')}) ${bigText}<br>`);  // Use 'join' to put space after comma between array elements    
-    let listItem = document.createElement('li');
-    let button = document.createElement('button');
-    button.classList.add('button__pokemon');
-    button.innerText = `${pokemon.name}`;
-    listItem.appendChild(button);
-    pokemonRoster.appendChild(listItem)
+// Output the list of Pokémons on the homepage using forEach() loop
+pokemonRepository.getAll().forEach (function(pokemon) {
+    pokemonRepository.addListItem(pokemon, pokemonRoster);
 });
 
 // Find one Pokémon by the name entered by user (must come after Pokémon list is created)
