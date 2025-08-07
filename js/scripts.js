@@ -49,25 +49,40 @@ let pokemonRepository = (function(){
     }
    
     function addListItem(pokemon, container){
+    // Add one list item with Pokemon button to the list container
+        // Create list item
         let listItem = document.createElement('li');
+        //Create button
         let button = document.createElement('button');
         button.classList.add('button__pokemon');
         button.innerText = pokemon.name;
+        // Add event listener to created button, watching out for click
+        button.addEventListener('click',function (event) {
+            showDetails(pokemon)
+        });
+        // Append list item with button to the list
         listItem.appendChild(button);
         container.appendChild(listItem);
     }
 
+    function showDetails (pokemon) {
+    // Displays Pokemon details
+        console.log(pokemon.name);
+    }
+
     return {
-        add: add,                   //  undefined
-        getAll: getAll,             //  returns compele list of Pokémons
-        getOne: getOne,             //  returns one Pokémon with specified name or undefined
-        addListItem: addListItem    //  undefined
+        add: add,                   // undefined
+        getAll: getAll,             // returns compele list of Pokémons
+        getOne: getOne,             // returns one Pokémon with specified name or undefined
+        addListItem: addListItem,   // undefined
+        showDetails: showDetails    // undefined
     }
 })();   // End of IIFE pokemonrepository
 
 // Define particular Pokémons as objects with 4 keys: 
 // name (string), height in meter (number), types (array of strings), abilities (array of strings).
 
+// Initialize Pokemon array
 let pokemonEntry = [
     {   name: 'Pikachu',
         height: 0.40,
@@ -109,9 +124,15 @@ for (let i = 0; i < pokemonEntry.length; i++) {
 // Define container element where to attach a list of Pokémons, only once
 let pokemonRoster = document.querySelector('.pokemon-list');
 // Output the list of Pokémons on the homepage using forEach() loop
-pokemonRepository.getAll().forEach (function(pokemon) {
-    pokemonRepository.addListItem(pokemon, pokemonRoster);
-});
+if (pokemonRoster) {
+    pokemonRepository.getAll().forEach (function(pokemon) {
+        pokemonRepository.addListItem(pokemon, pokemonRoster);
+    }) 
+} else {    // Throw error
+    alert('ERROR: Pokémon list container not found');
+    console.error('Pokémon list container not found')
+};
+
 
 // Find one Pokémon by the name entered by user (must come after Pokémon list is created)
 /*
