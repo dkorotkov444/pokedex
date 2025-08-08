@@ -123,15 +123,16 @@ a:active {
 }
 
 .homepage-heading {
+    margin: var(--default-margin);
     text-align: center;
 }
 
 .pokemon-list {
     display: flex;  /* Makes list a flex container */
     flex-direction: column;
-    align-items: flex-start;    /* Align buttons to the left */
+    align-items: center;    /* Align buttons to the left */
     gap: var(--small-grid-gap);
-    margin-left: 180px;
+    margin: var(--default-margin);
     list-style: none;
     padding: 0;
 }
