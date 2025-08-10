@@ -5,30 +5,27 @@ Pokedex is a simple web application for presenting information from Pokémon dat
 
 let pokemonRepository = (function(){
     // Defines Pokémon repository and its methods
-    // Define list of Pokémons as blank array
-    let pokemonList = [];    
+    // Each Pokémon is an objects with 6 keys: name (string), height in meter (number), types (array of strings), abilities (array of strings),
+    //  detailsUrl (string with URL of this Pokémon detail), imageUrl (string with URL of this Pokémon image file).
+
+    let pokemonList = [];   // Define list of Pokémons as a blank array
+    const pokemonKeys = ['name','height','types','abilities','detailsUrl', 'imageUrl'];  // Define the set of Pokémon object keys
+    const requiredDetailsKeys = ['height','types','abilities','sprites'];                // Object details keys to load from API response
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';  // PokéAPI URL   
 
     function add(pokemon){
         // Adds one Pokémon at the end of the array/list
-        // Check that argument type is object
-        if ((typeof(pokemon) !== "object") || (pokemon === null)){
+        if ((typeof(pokemon) !== "object") || (pokemon === null)){   // Check that argument type is object and that it is not empty
             // Display and log error message
             console.error('Only objects can be added to pokemonList!');
-            alert('Only objects can be added to pokemonList!');
             return; // Exit function if type validation failed
         };
 
-        // Check that argument object has correct set of keys
-        // Define standard key set for Pokemon
-        let pokemonKeys = ['name','height','types','abilities'];
-        // Read key set of the function argument
-        let actualKeys = Object.keys(pokemon);
-        if (actualKeys.length !== pokemonKeys.length ||             // Compare key arrays length
-            !actualKeys.every(key => pokemonKeys.includes(key))){   // Check if every argument key is in expected keys
-                // Display and log error message
-                console.error('Invalid Pokémon object: Missing or incorrect keys.');
-                alert('Add object with 4 keys (name, height, types, abilities)');
-                return; // Exit function if keys validation failed
+        // Check that argument object has correct subset of keys
+        let actualKeys = Object.keys(pokemon);                         // Read key set of the function argument
+        if(!actualKeys.every(key => pokemonKeys.includes(key))){       // Check if every argument key is in expected keys
+            console.error('Invalid Pokémon object: Incorrect keys.');  // Log error message
+            return; // Exit function if keys validation failed
         }
 
         // If all validations succeeded, add Pokémon to the list
@@ -47,17 +44,63 @@ let pokemonRepository = (function(){
         const foundPokemon= pokemonCalled[0];   // Assign to object first array element, undefined if empty
         return foundPokemon;   // Return an object with specified name if found, undefined otherwise
     }
-   
+
+    function loadList() {
+        // Loads list of Pokémons from PokéAPI
+        return fetch(apiUrl)
+            // Parse fetched data
+            .then(response => response.json())
+            .then(json => {
+            // Loop over parsed objects
+                json.results.forEach(item => {  
+                    let capitalizedName = item.name.charAt(0).toUpperCase() + item.name.slice(1);
+                    let pokemon = {
+                        name: capitalizedName,
+                        detailsUrl: item.url
+                    };
+                    // Call function that adds new Pokemon object to repository
+                    add(pokemon);
+                });
+        }).catch(function (err) {   // Handle errors
+            console.error(err);
+        })
+    }
+
+    function loadDetails(item) {
+        // Loads details for a particular Pokémon
+        let url = item.detailsUrl;
+        return fetch(url).then(response => response.json()) // Parse JSON data
+            .then(details => {
+                // Validate if all required Pokémon details (keys) are present in the API response
+                let actualKeys = Object.keys(details);
+                if (!requiredDetailsKeys.every(key => actualKeys.includes(key))){
+                    // Handle the case when the API response lacks required data
+                    console.error('API response is missing required Pokémon details.');
+                    return; // Stop execution if validation fails
+                }
+                // Add the details to the item if validation successful
+                item.imageUrl = details.sprites.front_default;
+                item.height = details.height / 10;      // PokéAPI stores height in decimeters, we store in meters                        
+                item.types = details.types.map(type => type.type.name);      // Store array of type names only, not whole objects
+                item.abilities = details.abilities.map(ability => ability.ability.name);    // Store array of abilitiy names only, not whole objects
+
+                // TEST: log the item with its new properties
+                console.log(item);
+
+                return item     // Function returns parameter updated with details
+        }).catch(function (err) {   // Handle errors
+            console.error(err);
+        });
+    }
+
     function addListItem(pokemon, container){
-    // Add one list item with Pokemon button to the list container
-        // Create list item
-        let listItem = document.createElement('li');
-        //Create button
-        let button = document.createElement('button');
+    // Add one list item with Pokémon button to the list container
+        let listItem = document.createElement('li');    // Create list item
+        let button = document.createElement('button');  //Create button
         button.classList.add('button__pokemon');
         button.innerText = pokemon.name;
         // Add event listener to created button, watching out for click
-        button.addEventListener('click',function (event) {
+        button.addEventListener('click',function () {
             showDetails(pokemon)
         });
         // Append list item with button to the list
@@ -67,7 +110,9 @@ let pokemonRepository = (function(){
 
     function showDetails (pokemon) {
     // Displays Pokemon details
-        console.log(pokemon.name);
+        loadDetails(pokemon).then(function(){
+        console.log(`${pokemon.name} called up.`);   // TEST
+        });
     }
 
     return {
@@ -75,13 +120,13 @@ let pokemonRepository = (function(){
         getAll: getAll,             // returns compele list of Pokémons
         getOne: getOne,             // returns one Pokémon with specified name or undefined
         addListItem: addListItem,   // undefined
-        showDetails: showDetails    // undefined
+        showDetails: showDetails,   // undefined
+        loadList: loadList,         // undefined  
+        loadDetails: loadDetails    // undefined
     }
 })();   // End of IIFE pokemonrepository
 
-// Define particular Pokémons as objects with 4 keys: 
-// name (string), height in meter (number), types (array of strings), abilities (array of strings).
-
+/*
 // Initialize Pokemon array
 let pokemonEntry = [
     {   name: 'Pikachu',
@@ -120,22 +165,28 @@ let pokemonEntry = [
 for (let i = 0; i < pokemonEntry.length; i++) {
     pokemonRepository.add(pokemonEntry[i]);
 }
+*/
 
 // Define container element where to attach a list of Pokémons, only once
 let pokemonRoster = document.querySelector('.pokemon-list');
-// Output the list of Pokémons on the homepage using forEach() loop
-if (pokemonRoster) {
+
+// Initialize Pokémon repository from Pokemon API call
+pokemonRepository.loadList().then(function () {
+    if (!pokemonRoster) {
+        console.error('Pokémon list container not found.');  // Log error message
+        return; // Terminate display function
+    }   
+    // Output the list of Pokémons on the homepage using forEach() loop
     pokemonRepository.getAll().forEach (function(pokemon) {
         pokemonRepository.addListItem(pokemon, pokemonRoster);
     }) 
-} else {    // Throw error
-    alert('ERROR: Pokémon list container not found');
-    console.error('Pokémon list container not found')
-};
+}).catch(function (err) {
+                // Handle errors
+                console.error(err);
+});
 
-
-// Find one Pokémon by the name entered by user (must come after Pokémon list is created)
 /*
+// Find one Pokémon by the name entered by user (must come after Pokémon list is created)
 let wanted = prompt('Find Pokémon called: ');
 let wantedPokemon = pokemonRepository.getOne(wanted);
 if (wantedPokemon) { // Check if a Pokémon was actually found
