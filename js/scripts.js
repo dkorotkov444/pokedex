@@ -8,10 +8,14 @@ let pokemonRepository = (function(){
     // Each Pokémon is an objects with 6 keys: name (string), height in meter (number), types (array of strings), abilities (array of strings),
     //  detailsUrl (string with URL of this Pokémon detail), imageUrl (string with URL of this Pokémon image file).
 
+    // Constants and variables definitions
     let pokemonList = [];   // Define list of Pokémons as a blank array
     const pokemonKeys = ['name','height','types','abilities','detailsUrl', 'imageUrl'];  // Define the set of Pokémon object keys
     const requiredDetailsKeys = ['height','types','abilities','sprites'];                // Object details keys to load from API response
-    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';  // PokéAPI URL   
+    const pokeapiUrl = 'https://pokeapi.co/api/v2/pokemon/';  // PokéAPI URL   
+    const numberPokemons = 150;     // Number of Pokémons addressed in the PokeAPI
+    const pageSize = 15;            // Number of Pokémons displayed per page
+    let currentOffset = 0;          // This variable's state is maintained by the closure
 
     function add(pokemon){
         // Adds one Pokémon at the end of the array/list
@@ -60,11 +64,11 @@ let pokemonRepository = (function(){
     function loadList() {
         // Loads list of Pokémons from PokéAPI
         showLoadingMessage();   // Show data loading message
-        return fetch(apiUrl)
+        let listUrl = `${pokeapiUrl}?limit=${numberPokemons}`;  // PokéAPI URL for all Pokemons
+        return fetch(listUrl)
             // Parse fetched data
             .then(response => response.json())
             .then(json => {
-                console.log('Start loading');
                 // Loop over parsed objects
                 json.results.forEach(item => {  
                     let capitalizedName = item.name.charAt(0).toUpperCase() + item.name.slice(1);
@@ -76,6 +80,36 @@ let pokemonRepository = (function(){
                     add(pokemon);
                 });
                 setTimeout(hideLoadingMessage, 1000);  //Show data loading message for 1 second minimum, then hide
+        }).catch(function (err) {   // Handle errors
+            hideLoadingMessage();   // Hide loading message immediately
+            console.error(err);
+        })
+    }
+
+    function loadPage(offset) {
+        // Loads one page of Pokémons from PokéAPI
+        showLoadingMessage();   // Show data loading message
+        let pageUrl = `${pokeapiUrl}?limit=${pageSize}&offset=${offset}`;  // PokéAPI URL for one page of Pokemons
+
+        // Clear the existing list before loading the new page
+        pokemonList = [];
+
+        return fetch(pageUrl)
+            // Parse fetched data
+            .then(response => response.json())
+            .then(json => {
+                // Loop over parsed objects
+                json.results.forEach(item => {  
+                    let capitalizedName = item.name.charAt(0).toUpperCase() + item.name.slice(1);
+                    let pokemon = {
+                        name: capitalizedName,
+                        detailsUrl: item.url
+                    };
+                    // Call function that adds new Pokemon object to repository
+                    add(pokemon);
+                });
+                hideLoadingMessage();  //Show data loading message for 1 second minimum, then hide
+                return pokemonList; // Return the loaded list (one page long)
         }).catch(function (err) {   // Handle errors
             hideLoadingMessage();   // Hide loading message immediately
             console.error(err);
@@ -100,7 +134,7 @@ let pokemonRepository = (function(){
                 item.height = details.height / 10;      // PokéAPI stores height in decimeters, we store in meters                        
                 item.types = details.types.map(type => type.type.name);      // Store array of type names only, not whole objects
                 item.abilities = details.abilities.map(ability => ability.ability.name);    // Store array of abilitiy names only, not whole objects
-                setTimeout(hideLoadingMessage, 1000);  //Show data loading message for 1 second minimum, then hide
+                hideLoadingMessage();  //Show data loading message for 1 second minimum, then hide
                 return item         // Function returns parameter updated with details
         }).catch(function (err) {   // Handle errors
             hideLoadingMessage();   // Hide loading message immediately
@@ -130,62 +164,78 @@ let pokemonRepository = (function(){
         });
     }
 
+    // Public pokemonRepository methods
     return {
         add: add,                   // undefined
         getAll: getAll,             // returns compele list of Pokémons
         getOne: getOne,             // returns one Pokémon with specified name or undefined
         addListItem: addListItem,   // undefined
         showDetails: showDetails,   // undefined
-        loadList: loadList,         // undefined  
-        loadDetails: loadDetails    // undefined
+        //loadList: loadList,       OBSOLETE
+        loadPage: loadPage,         // undefined
+        loadDetails: loadDetails,    // undefined
+        getCurrentOffset: () => currentOffset, // Public method to get offset
+        getPageSize: () => pageSize, // Public method to get page size
+        getNumberPokemons: () => numberPokemons, // Public method to get total Pokemons
+        setCurrentOffset: (newOffset) => { currentOffset = newOffset; }, // Public method to set offset
     }
-})();   // End of IIFE pokemonrepository
+})();   // End of IIFE pokemonRepository
+
+// MAIN PROGRAM
+
+let pokemonRoster = document.querySelector('.pokemon-list');  // Define container element where to attach a list of Pokémons, only once
+const nextButton = document.querySelector('.next-button');    // Define button calling next Pokémon list page
+const prevButton = document.querySelector('.prev-button');    // Define button calling previous Pokémon list page
+
+// Function rendering a Pokemon list page
+function renderPage(offset) {
+    pokemonRepository.loadPage(offset)
+        .then(() => {
+            if (!pokemonRoster) {
+                console.error('Pokémon list container not found.');
+                return; // Terminate display function
+             }
+            pokemonRoster.innerHTML = '';   // Clear the list
+            pokemonRepository.getAll().forEach(function(pokemon) {
+                pokemonRepository.addListItem(pokemon, pokemonRoster);
+            });
+        })
+        .catch(function (err) {
+             console.error(err);
+        });
+}
+
+// Initial page load
+renderPage(0);
+
+// Event listeners for pagination buttons
+nextButton.addEventListener('click', () => {
+    // Get pagination parameters
+    const currentOffset = pokemonRepository.getCurrentOffset();
+    const pageSize = pokemonRepository.getPageSize();
+    const numberPokemons = pokemonRepository.getNumberPokemons();
+    // Update parameters and render page
+    if (currentOffset + pageSize < numberPokemons) {
+        const newOffset = currentOffset + pageSize;
+        pokemonRepository.setCurrentOffset(newOffset);
+        renderPage(newOffset);
+    }
+});
+
+prevButton.addEventListener('click', () => {
+    // Get pagination parameters
+    const currentOffset = pokemonRepository.getCurrentOffset();
+    const pageSize = pokemonRepository.getPageSize();
+    // Update parameters and render page
+    if (currentOffset > 0) {
+        const newOffset = currentOffset - pageSize;
+        pokemonRepository.setCurrentOffset(newOffset);
+        renderPage(newOffset);
+    }
+});
 
 /*
-// Initialize Pokemon array
-let pokemonEntry = [
-    {   name: 'Pikachu',
-        height: 0.40,
-        types: ['electric'],
-        abilities: ['static', 'lightningrod'],
-    },
-    {   name: 'Raichu',
-        height: 0.80,
-        types: ['electric'],
-        abilities: ['static', 'lightningrod']
-    },
-    {   name: 'Wartortle',
-        height: 1.00,
-        types: ['water'],
-        abilities: ['rain-dish', 'torrent']
-    },
-    {   name: 'Kangaskhan',
-        height: 2.20,
-        types: ['normal'],
-        abilities: ['inner-focus', 'early-bird', 'scrappy']
-    },
-    {   name: 'Sandshrew',
-        height: 0.60,
-        types: ['ground'],
-        abilities: ['sand-veil', 'sand-rush']
-    },
-    {   name: 'Gloom',
-        height: 0.60,
-        types: ['grass', 'poison'],
-        abilities: ['stench', 'chlorophyll']
-    }
-]
-
-// Add pokemons to repository in a for cycle over pokemonEntry array
-for (let i = 0; i < pokemonEntry.length; i++) {
-    pokemonRepository.add(pokemonEntry[i]);
-}
-*/
-
-// Define container element where to attach a list of Pokémons, only once
-let pokemonRoster = document.querySelector('.pokemon-list');
-
-// Initialize Pokémon repository from Pokemon API call
+// Initialize Pokémon repository from Pokémon API call
 pokemonRepository.loadList().then(function () {
     if (!pokemonRoster) {
         console.error('Pokémon list container not found.');  // Log error message
@@ -196,11 +246,11 @@ pokemonRepository.loadList().then(function () {
         pokemonRepository.addListItem(pokemon, pokemonRoster);
     }) 
 }).catch(function (err) {
-                // Handle errors
-                console.error(err);
+    // Handle errors
+    console.error(err);
 });
-
-/*
+*/
+/*  NOT RELEVANT OR THE TIME BEING
 // Find one Pokémon by the name entered by user (must come after Pokémon list is created)
 let wanted = prompt('Find Pokémon called: ');
 let wantedPokemon = pokemonRepository.getOne(wanted);

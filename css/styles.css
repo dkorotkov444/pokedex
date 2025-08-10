@@ -1,7 +1,5 @@
 /* Colors used
 Text color:         #1c4154
-Primary background color:   blanchedalmond
-Secondary backgroundcolor:  #cee4d8
 Primary text color:         #071f35
 Secondary text color:       #24496b
 Reserve color 1:            #446d92
@@ -148,8 +146,22 @@ a:active {
     padding: 0;
 }
 
+.paging-buttons {
+    display: flex;
+    justify-content: center; /* This centers the items horizontally */
+    align-items: center; /* This centers the items vertically */
+    gap: var(--small-grid-gap); /* Adds space between the buttons */
+}
+
+.prev-button,
+.next-button {
+    background-color: var(--primary-background-color);
+    border: none;
+    padding: var(--small-padding); 
+}
+
 .button__pokemon {
-    display: block; 
+    display: inline-block; 
     width: 180px;
     flex: 0 0 auto;    /*Keeps button as wide as text */
     font-family: inherit;   /* takes the font from the outer container */

@@ -36,13 +36,16 @@
         </header>
 
         <main>
+            
             <h1 class="homepage-heading">Pokédex, a.k.a. Little Black Book</h1>
             <h2 class="loading-message hidden">Loading data from PokéAPI</h2>
-            <ul class = "pokemon-list">
-                <script src="js/promise-polyfill.js"></script>
-                <script src="js/fetch.umd.js"></script>
-                <script src="js/scripts.js"></script>
-            </ul>
+            <ul class = "pokemon-list"></ul>
+            <div class="paging-buttons"><button class="prev-button">&lt;- Previous page</button><button class="next-button">Next page -&gt;</button></div>
+
+            <script src="js/promise-polyfill.js"></script>
+            <script src="js/fetch.umd.js"></script>
+            <script src="js/scripts.js"></script>
+
         </main>
 
         <footer class="page-footer"> 
