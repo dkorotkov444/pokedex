@@ -44,7 +44,7 @@ let pokemonRepository = (function(){
     }
 
     function hideLoadingMessage() {
-    // Displays data upload message on the homepage
+    // Hides data upload message from the homepage
         const loadingMessage = document.querySelector('.loading-message');
         loadingMessage.classList.add('hidden');
     }
@@ -59,7 +59,7 @@ let pokemonRepository = (function(){
 
     function loadList() {
         // Loads list of Pokémons from PokéAPI
-        showLoadingMessage();
+        showLoadingMessage();   // Show data loading message
         return fetch(apiUrl)
             // Parse fetched data
             .then(response => response.json())
@@ -75,16 +75,16 @@ let pokemonRepository = (function(){
                     // Call function that adds new Pokemon object to repository
                     add(pokemon);
                 });
-                setTimeout(hideLoadingMessage, 1000);  //Show loading message for 1 second minimum, then hide
+                setTimeout(hideLoadingMessage, 1000);  //Show data loading message for 1 second minimum, then hide
         }).catch(function (err) {   // Handle errors
-            hideLoadingMessage();
+            hideLoadingMessage();   // Hide loading message immediately
             console.error(err);
         })
     }
 
     function loadDetails(item) {
         // Loads details for a particular Pokémon
-        showLoadingMessage();
+        showLoadingMessage();   // Show data loading message
         let url = item.detailsUrl;
         return fetch(url).then(response => response.json()) // Parse JSON data
             .then(details => {
@@ -100,10 +100,10 @@ let pokemonRepository = (function(){
                 item.height = details.height / 10;      // PokéAPI stores height in decimeters, we store in meters                        
                 item.types = details.types.map(type => type.type.name);      // Store array of type names only, not whole objects
                 item.abilities = details.abilities.map(ability => ability.ability.name);    // Store array of abilitiy names only, not whole objects
-                setTimeout(hideLoadingMessage, 1000);  //Show loading message for 1 second minimum, then hide
+                setTimeout(hideLoadingMessage, 1000);  //Show data loading message for 1 second minimum, then hide
                 return item         // Function returns parameter updated with details
         }).catch(function (err) {   // Handle errors
-            hideLoadingMessage();
+            hideLoadingMessage();   // Hide loading message immediately
             console.error(err);
         });
     }
