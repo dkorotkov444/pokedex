@@ -13,7 +13,7 @@ Reserve color 3:            #eff6ff
     --secondary-color: #e0b354;
     --dark-grey: #2b2b2b;
     --primary-background-color:blanchedalmond;
-    --secondary-background-color:#cee4d8;
+    --secondary-background-color:#29178f;
     --default-text-color: white;
     --link-color: #24496b;
     --link-visited-color: purple;
@@ -127,6 +127,17 @@ a:active {
     text-align: center;
 }
 
+.loading-message {
+    text-align: center;
+    color: var(--default-text-color);
+    background-color: var(--secondary-background-color);
+    padding: var(--large-padding);
+}
+
+.hidden {       /* Hides the object on the page */
+    display: none;
+}
+
 .pokemon-list {
     display: flex;  /* Makes list a flex container */
     flex-direction: column;
@@ -159,36 +170,36 @@ a:active {
   /* reduces the opacity of the button to 80% */
   opacity: var(--opacity-slight-transparent);
 }
-
+/*
 .button__link {
-    display: inline-block; /* Makes it behave like a block but allows other elements on the same line */
-    flex: 0 0 auto;   /* Keeps button as wide as text */
-    align-self: center; /* Keeps the block in center along secondary axis, here it is horizontal */
-    padding: var(--small-padding) var(--medium-padding); /* Adjust padding for button size */
-    background-color: var(--primary-color); /* Button background color */
-    color: var(--default-text-color); /* Text color */
-    text-align: center; /* Center the text */
-    text-decoration: none; /* Remove underline from link */
-    border: none; /* Remove default border */
-    border-radius: 3px; /* Rounded corners */
+    display: inline-block; /* Makes it behave like a block but allows other elements on the same line /
+    flex: 0 0 auto;   /* Keeps button as wide as text /
+    align-self: center; /* Keeps the block in center along secondary axis, here it is horizontal /
+    padding: var(--small-padding) var(--medium-padding); /* Adjust padding for button size /
+    background-color: var(--primary-color); /* Button background color /
+    color: var(--default-text-color); /* Text color /
+    text-align: center; /* Center the text /
+    text-decoration: none; /* Remove underline from link /
+    border: none; /* Remove default border /
+    border-radius: 3px; /* Rounded corners /
     border-bottom: 2px solid var(--transp-black);
-    cursor: pointer; /* Indicate it's clickable when hovering over the button*/
-    transition-property: opacity 0.3s ease;  /* Smooth transition on hover */
+    cursor: pointer; /* Indicate it's clickable when hovering over the button/
+    transition-property: opacity 0.3s ease;  /* Smooth transition on hover /
 }
 .button__link:link, 
 .button__link:visited {
-    color: var(--default-text-color); /* Keeps text color white for link  */
+    color: var(--default-text-color); /* Keeps text color white for link  /
 }
 .button__link:hover,
 .button__link:focus {
-    /* reduces the opacity of the button to 80% */
+    /* reduces the opacity of the button to 80% /
     opacity: var(--opacity-slight-transparent);
-    color: var(--default-text-color); /* Keeps text color white for link  */
+    color: var(--default-text-color); /* Keeps text color white for link  /
 }
 .button__link:active {
-    opacity: var(--opacity-semi-transparent); /* Even more transparent on click */
-    color: var(--default-text-color); /* Keeps text color white for link  */
-    transform: translateY(1px); /* Slight press effect */
+    opacity: var(--opacity-semi-transparent); /* Even more transparent on click /
+    color: var(--default-text-color); /* Keeps text color white for link  /
+    transform: translateY(1px); /* Slight press effect /
 }
 
 .pokelist {
