@@ -13,7 +13,7 @@ let pokemonRepository = (function(){
     const pokemonKeys = ['name','height','types','abilities','detailsUrl', 'imageUrl'];  // Define the set of Pokémon object keys
     const requiredDetailsKeys = ['height','types','abilities','sprites'];                // Object details keys to load from API response
     const pokeapiUrl = 'https://pokeapi.co/api/v2/pokemon/';  // PokéAPI URL   
-    const numberPokemons = 150;     // Number of Pokémons addressed in the PokeAPI
+    const pokemonCount = 150;       // Number of Pokémons to be loaded over PokeAPI 
     const pageSize = 15;            // Number of Pokémons displayed per page
     let currentOffset = 0;          // This variable's state is maintained by the closure
 
@@ -60,7 +60,7 @@ let pokemonRepository = (function(){
         const foundPokemon= pokemonCalled[0];   // Assign to object first array element, undefined if empty
         return foundPokemon;   // Return an object with specified name if found, undefined otherwise
     }
-
+/*  OBSOLETE
     function loadList() {
         // Loads list of Pokémons from PokéAPI
         showLoadingMessage();   // Show data loading message
@@ -85,12 +85,17 @@ let pokemonRepository = (function(){
             console.error(err);
         })
     }
-
+*/
     function loadPage(offset) {
         // Loads one page of Pokémons from PokéAPI
         showLoadingMessage();   // Show data loading message
-        let pageUrl = `${pokeapiUrl}?limit=${pageSize}&offset=${offset}`;  // PokéAPI URL for one page of Pokemons
-
+        let limit = pageSize
+        // Check if the current offset plus the page size will exceed the total Pokemont count to display
+        if (offset + pageSize > pokemonCount) {
+            // If it does, calculate the remaining number of pokemons to fetch
+            limit = pokemonCount - offset;
+        }
+        let pageUrl = `${pokeapiUrl}?limit=${limit}&offset=${offset}`;  // PokéAPI URL for one page of Pokemons
         // Clear the existing list before loading the new page
         pokemonList = [];
 
@@ -173,10 +178,10 @@ let pokemonRepository = (function(){
         showDetails: showDetails,   // undefined
         //loadList: loadList,       OBSOLETE
         loadPage: loadPage,         // undefined
-        loadDetails: loadDetails,    // undefined
+        loadDetails: loadDetails,   // undefined
         getCurrentOffset: () => currentOffset, // Public method to get offset
         getPageSize: () => pageSize, // Public method to get page size
-        getNumberPokemons: () => numberPokemons, // Public method to get total Pokemons
+        getPokemonCount: () => pokemonCount, // Public method to get total Pokemons count
         setCurrentOffset: (newOffset) => { currentOffset = newOffset; }, // Public method to set offset
     }
 })();   // End of IIFE pokemonRepository
@@ -199,6 +204,10 @@ function renderPage(offset) {
             pokemonRepository.getAll().forEach(function(pokemon) {
                 pokemonRepository.addListItem(pokemon, pokemonRoster);
             });
+            // If we are on the first page, hide "Previous page" button
+            prevButton.classList.toggle('hidden', offset === 0)
+            // If we are on the last page, hide "Next page" button
+            nextButton.classList.toggle('hidden', offset + pokemonRepository.getPageSize() >= pokemonRepository.getPokemonCount());
         })
         .catch(function (err) {
              console.error(err);
@@ -213,10 +222,10 @@ nextButton.addEventListener('click', () => {
     // Get pagination parameters
     const currentOffset = pokemonRepository.getCurrentOffset();
     const pageSize = pokemonRepository.getPageSize();
-    const numberPokemons = pokemonRepository.getNumberPokemons();
-    // Update parameters and render page
-    if (currentOffset + pageSize < numberPokemons) {
-        const newOffset = currentOffset + pageSize;
+    const numberOfPokemons = pokemonRepository.getPokemonCount();
+    // Update parameters and render page only if there is a next page
+    if (currentOffset + pageSize < numberOfPokemons) {
+        let newOffset = currentOffset + pageSize;
         pokemonRepository.setCurrentOffset(newOffset);
         renderPage(newOffset);
     }
@@ -234,7 +243,7 @@ prevButton.addEventListener('click', () => {
     }
 });
 
-/*
+/* OBSOLETE
 // Initialize Pokémon repository from Pokémon API call
 pokemonRepository.loadList().then(function () {
     if (!pokemonRoster) {
@@ -250,7 +259,7 @@ pokemonRepository.loadList().then(function () {
     console.error(err);
 });
 */
-/*  NOT RELEVANT OR THE TIME BEING
+/*  NOT RELEVANT FOR THE TIME BEING
 // Find one Pokémon by the name entered by user (must come after Pokémon list is created)
 let wanted = prompt('Find Pokémon called: ');
 let wantedPokemon = pokemonRepository.getOne(wanted);
