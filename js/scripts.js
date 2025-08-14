@@ -4,7 +4,7 @@ Pokedex is a simple web application for presenting information from Pokémon dat
 */
 
 let pokemonRepository = (function(){
-    // Defines Pokémon repository and its methods
+    // This function defines Pokémon repository and its methods
     // Each Pokémon is an objects with 6 keys: name (string), height in meter (number), types (array of strings), abilities (array of strings),
     //  detailsUrl (string with URL of this Pokémon detail), imageUrl (string with URL of this Pokémon image file).
 
@@ -165,9 +165,87 @@ let pokemonRepository = (function(){
     function showDetails (pokemon) {
     // Displays Pokemon details
         loadDetails(pokemon).then(function(){
-        console.log(`${pokemon.name} called up.`);   // TEST
+        // TEST console.log(`${pokemon.name} called up.`);   
+        showModal(pokemon);
         });
     }
+
+    function showModal (pokemon) {
+        // This function displays a modal with Pokémon details
+        let modalContainer = document.querySelector('#modal-container');
+        modalContainer.classList.add('is-visible');
+
+        // Clear all pre-existing modal container content
+        modalContainer.innerHTML = '';
+
+        // Create modal itself
+        let modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        // Add "Close modal" button
+        let closeButton = document.createElement('button');
+        closeButton.classList.add('modal-close');
+        closeButton.innerText = 'Close';
+        closeButton.addEventListener('click', hideModal);
+
+        // Add modal content: title and text
+        let modalTitle = document.createElement('h1');
+        modalTitle.innerText = `${pokemon.name} details`;
+
+        let contentWrapper = document.createElement('div');  // Wrapper for Pokemon image and details
+        contentWrapper.classList.add('modal-content-wrapper');
+
+        // Add modal image: Pokemon s     
+        let modalImage = document.createElement('img');
+        modalImage.src = pokemon.imageUrl;
+        modalImage.alt = `${pokemon.name} default image`;
+        modalImage.classList.add('modal-pokemon-image');
+
+        let modalContent = document.createElement('p');
+        modalContent.innerText = 
+            `Height: ${pokemon.height}
+             Types: ${pokemon.types.join(', ')}
+             Abilities: ${pokemon.abilities.join(', ')}`;
+        modalContent.classList.add('modal-pokemon-text');
+
+        // Appentd image and details to content wrapper
+        contentWrapper.appendChild(modalImage);
+        contentWrapper.appendChild(modalContent);
+
+        modal.appendChild(closeButton);
+        modal.appendChild(modalTitle);
+        modal.appendChild(contentWrapper);
+        modalContainer.appendChild(modal);
+
+        // Show modal
+        modalContainer.classList.add('is-visible');
+
+        // Hide modal when user clicks on the modal overlay, but outside the modal itself
+        modalContainer.addEventListener('click',(e) => {
+            if (e.target === modalContainer){
+                hideModal();
+            }
+        });
+            
+    }  // End of function showModal
+
+    function hideModal() {
+        // This function hides modal container
+        let modalContainer = document.querySelector('#modal-container');
+        modalContainer.classList.remove('is-visible');
+    }
+
+//    document.querySelector('#show-modal').addEventListener('click',() => {
+//        showModal('MODAL TITLE', 'Modal text')
+//    });
+
+    window.addEventListener('keydown',(e) => {          // Hides modal when ESC key is pressed
+        let modalContainer = document.querySelector('#modal-container');
+        if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')){
+            hideModal();
+        }
+    });
+
 
     // Public pokemonRepository methods
     return {
@@ -186,7 +264,7 @@ let pokemonRepository = (function(){
     }
 })();   // End of IIFE pokemonRepository
 
-// MAIN PROGRAM
+//  ************    MAIN PROGRAM    ************
 
 let pokemonRoster = document.querySelector('.pokemon-list');  // Define container element where to attach a list of Pokémons, only once
 const nextButton = document.querySelector('.next-button');    // Define button calling next Pokémon list page
@@ -194,24 +272,23 @@ const prevButton = document.querySelector('.prev-button');    // Define button c
 
 // Function rendering a Pokemon list page
 function renderPage(offset) {
-    pokemonRepository.loadPage(offset)
-        .then(() => {
-            if (!pokemonRoster) {
-                console.error('Pokémon list container not found.');
-                return; // Terminate display function
-             }
-            pokemonRoster.innerHTML = '';   // Clear the list
-            pokemonRepository.getAll().forEach(function(pokemon) {
-                pokemonRepository.addListItem(pokemon, pokemonRoster);
-            });
-            // If we are on the first page, hide "Previous page" button
-            prevButton.classList.toggle('hidden', offset === 0)
-            // If we are on the last page, hide "Next page" button
-            nextButton.classList.toggle('hidden', offset + pokemonRepository.getPageSize() >= pokemonRepository.getPokemonCount());
-        })
-        .catch(function (err) {
-             console.error(err);
+    pokemonRepository.loadPage(offset).then(() => {
+        if (!pokemonRoster) {
+            console.error('Pokémon list container not found.');
+            return; // Terminate display function
+        }
+        pokemonRoster.innerHTML = '';   // Clear the list
+        pokemonRepository.getAll().forEach(function(pokemon) {
+            pokemonRepository.addListItem(pokemon, pokemonRoster);
         });
+        // If we are on the first page, hide "Previous page" button
+        prevButton.classList.toggle('hidden', offset === 0)
+        // If we are on the last page, hide "Next page" button
+        nextButton.classList.toggle('hidden', offset + pokemonRepository.getPageSize() >= pokemonRepository.getPokemonCount());
+    })
+    .catch(function (err) {
+            console.error(err);
+    });
 }
 
 // Initial page load

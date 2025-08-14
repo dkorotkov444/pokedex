@@ -38,10 +38,16 @@
         <main>
             
             <h1 class="homepage-heading">Pokédex, a.k.a. Little Black Book</h1>
-            <h2 class="loading-message hidden">Loading data from PokéAPI</h2>
-            <ul class = "pokemon-list"></ul>
+            <h2 class="loading-message hidden">Loading data from PokéAPI</h2>   <!-- Data loading message -->
+            <ul class = "pokemon-list"></ul>    <!-- Place to display Pokemon list -->
+            <!-- Page turn buttons -->
             <div class="paging-buttons"><button class="prev-button">&lt;- Previous page</button><button class="next-button">Next page -&gt;</button></div>
 
+            <!-- Modal definition -->
+            <div id="modal-container"></div>
+            
+
+            <!-- JavaScript code -->
             <script src="js/promise-polyfill.js"></script>
             <script src="js/fetch.umd.js"></script>
             <script src="js/scripts.js"></script>
