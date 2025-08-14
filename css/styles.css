@@ -8,7 +8,7 @@ Reserve color 3:            #eff6ff
 */
 :root {
     --primary-color: #357b70;
-    --secondary-color: #e0b354;
+    --secondary-color: #e6e7df;
     --dark-grey: #2b2b2b;
     --primary-background-color:blanchedalmond;
     --secondary-background-color:#29178f;
@@ -181,6 +181,74 @@ a:active {
   cursor: pointer;
   /* reduces the opacity of the button to 80% */
   opacity: var(--opacity-slight-transparent);
+}
+
+#modal-container {
+  display: none;    
+}
+
+#modal-container.is-visible {
+  position: fixed;
+  padding: 20px;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* to show it above other content */
+  overflow: auto; /* to allow scrolling if the screen is not high enough*/
+  /* this is used to center the modal */
+  display: grid;
+  text-align: center;
+}
+
+.modal {
+  margin: auto;
+  display: inline-block;
+  box-sizing: border-box;
+  background: var(--secondary-color)/*#fff*/;
+  padding: 15px;
+  width: 100%;
+  max-width: 700px;
+  text-align: left;
+}
+
+.modal-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Vertically center the items */
+  gap: var(--medium-grid-gap); /* Adds space between the image and the text */
+}
+
+.modal-pokemon-image {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+}
+
+/* Media query for smaller screens */
+@media all and (max-width: 600px) {
+  .modal-content-wrapper {
+    flex-direction: column; /* Stacks the image and text vertically */
+  }
+}
+
+.modal-close {
+  float: right;
+  /*-webkit-appearance: none;*/
+  border: 0;
+  background: none;
+  color: #777;
+  text-decoration: underline;
+}
+
+.modal h1 {
+  margin-top: 0;
+}
+
+.modal p {
+  margin-bottom: 0;
 }
 /*
 .button__link {
