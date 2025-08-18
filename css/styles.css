@@ -1,11 +1,4 @@
-/* Colors used
-Text color:         #1c4154
-Primary text color:         #071f35
-Secondary text color:       #24496b
-Reserve color 1:            #446d92
-Reserve color 2:            #98b1c8
-Reserve color 3:            #eff6ff
-*/
+
 :root {
     --primary-color: #357b70;
     --secondary-color: #e6e7df;
@@ -43,45 +36,12 @@ Reserve color 3:            #eff6ff
     --laptop-screen: 1800px;
     --opacity-semi-transparent: 0.5;
     --opacity-slight-transparent: 0.8;
-    /* Override default Bootstrap colors for my custom look 
-    --bs-btn-bg: var(--primary-color);
-    --bs-btn-border-color: var(--primary-color);
-    --bs-btn-hover-bg: #2d665e;
-    --bs-btn-hover-border-color: #2d665e;
-    --bs-btn-active-bg: #26554d;
-    --bs-btn-active-border-color: #26554d;
-    --bs-btn-focus-shadow-rgb: 53, 123, 112;
-    */
 }
 
 * {
     box-sizing: border-box;
 }
 
-.page-header {
-    display: flex;
-    width: 100%;
-    padding: var(--medium-padding);
-}
-.page-header__item {
-    flex: 0 1 100px;
-}
-.page-header__item:last-child {
-    flex-grow: 1;
-    text-align: right;
-}
-/*
-.navigation-list {
-    list-style-type: none;
-}
-.navigation-list li {
-    display: inline-block;
-    margin-left: var(--small-margin);
-}
-.navigation-list__item--active {
-  text-decoration: none;
-}
-*/
 .page-footer {
     clear: both;
     display: flex;
@@ -105,9 +65,9 @@ Reserve color 3:            #eff6ff
 
 .paging-buttons {
     display: flex;
-    justify-content: center; /* This centers the items horizontally */
-    align-items: center; /* This centers the items vertically */
-    gap: var(--small-grid-gap); /* Adds space between the buttons */
+    justify-content: center; /* This centers buttons horizontally */
+    align-items: center; /* This centers buttons vertically */
+    gap: var(--small-grid-gap); /* Adds small space between buttons */
 }
 
 .prev-button,
