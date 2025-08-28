@@ -148,11 +148,8 @@ let pokemonRepository = (function(){
     function showDetails (pokemon) {
     // Displays Pokemon details
         loadDetails(pokemon).then(() => {
-        // TEST console.log(`${pokemon.name} called up.`);   
-        //showModal(pokemon);
         const modalTitle = document.querySelector('.modal-title');
         const modalBody = document.querySelector('.modal-body');
-        //const pokemonCard = document.createElement('div');
 
         // Clear modal content
         modalTitle.textContent = '';
@@ -161,7 +158,7 @@ let pokemonRepository = (function(){
         // Compose modal title
         modalTitle.textContent = `${pokemon.name} details`;
 
-        // Compose modal body in pokemonCard
+        // Compose modal body
         // Add Pokemon image    
         const pokemonImage = document.createElement('img');
         pokemonImage.src = pokemon.imageUrl;
@@ -175,9 +172,6 @@ let pokemonRepository = (function(){
 
         modalBody.appendChild(pokemonImage);
         modalBody.appendChild(pokemonDetails);
-
-        //modalBody.appendChild(pokemonCard);
-
         });
     }
 
