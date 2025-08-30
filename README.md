@@ -42,7 +42,7 @@ error messages.
 ● Promis polyfill
 ● Fetch polyfill
 ## Performance
-JavaScript code was minified using Toptal JavaScript Minifier
+JavaScript code and stylesheet were minified using Toptal JavaScript and CSS Minifiers
 ## UI elements used
 ● List group
 ● Modal

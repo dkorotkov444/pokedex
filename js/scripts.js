@@ -54,7 +54,7 @@ let pokemonRepository = (function(){
     }
 
     function getOne(nameCalled){
-        // Retrieves one pokemon with specified name, assumes no duplicates in the list for simplicity
+        // Retrieves one Pokémon with specified name, assumes no duplicates in the list for simplicity
         // Filter pokemonList by name down to array of 1 object, empty if no match found
         let pokemonCalled = pokemonList.filter((pokemon) => pokemon.name === nameCalled);
         const foundPokemon= pokemonCalled[0];   // Assign to object first array element, undefined if empty
@@ -65,12 +65,12 @@ let pokemonRepository = (function(){
         // Loads one page of Pokémons from PokéAPI
         showLoadingMessage();   // Show data loading message
         let limit = pageSize
-        // Check if the current offset plus the page size will exceed the total Pokemont count to display
+        // Check if the current offset plus the page size will exceed the total Pokémon count to display
         if (offset + pageSize > pokemonCount) {
-            // If it does, calculate the remaining number of pokemons to fetch
+            // If it does, calculate the remaining number of Pokémons to fetch
             limit = pokemonCount - offset;
         }
-        let pageUrl = `${pokeapiUrl}?limit=${limit}&offset=${offset}`;  // PokéAPI URL for one page of Pokemons
+        let pageUrl = `${pokeapiUrl}?limit=${limit}&offset=${offset}`;  // PokéAPI URL for one page of Pokémons
         // Clear the existing list before loading the new page
         pokemonList = [];
 
@@ -85,7 +85,7 @@ let pokemonRepository = (function(){
                         name: capitalizedName,
                         detailsUrl: item.url
                     };
-                    // Call function that adds new Pokemon object to repository
+                    // Call function that adds new Pokémon object to repository
                     add(pokemon);
                 });
                 hideLoadingMessage();  //Show data loading message for 1 second minimum, then hide
@@ -146,13 +146,10 @@ let pokemonRepository = (function(){
     }
 
     function showDetails (pokemon) {
-    // Displays Pokemon details
+    // Displays Pokémon details
         loadDetails(pokemon).then(() => {
-        // TEST console.log(`${pokemon.name} called up.`);   
-        //showModal(pokemon);
         const modalTitle = document.querySelector('.modal-title');
         const modalBody = document.querySelector('.modal-body');
-        //const pokemonCard = document.createElement('div');
 
         // Clear modal content
         modalTitle.textContent = '';
@@ -161,12 +158,12 @@ let pokemonRepository = (function(){
         // Compose modal title
         modalTitle.textContent = `${pokemon.name} details`;
 
-        // Compose modal body in pokemonCard
-        // Add Pokemon image    
+        // Compose modal body
+        // Add Pokémon image    
         const pokemonImage = document.createElement('img');
         pokemonImage.src = pokemon.imageUrl;
         pokemonImage.alt = `${pokemon.name} default image`;
-        // Add Pokemon details text
+        // Add Pokémon details text
         const pokemonDetails = document.createElement('p');
         pokemonDetails.innerText = 
             `Height: ${pokemon.height}
@@ -175,8 +172,6 @@ let pokemonRepository = (function(){
 
         modalBody.appendChild(pokemonImage);
         modalBody.appendChild(pokemonDetails);
-
-        //modalBody.appendChild(pokemonCard);
 
         });
     }
@@ -192,7 +187,7 @@ let pokemonRepository = (function(){
         loadDetails: loadDetails,   // undefined
         getCurrentOffset: () => currentOffset, // Public method to get offset
         getPageSize: () => pageSize, // Public method to get page size
-        getPokemonCount: () => pokemonCount, // Public method to get total Pokemons count
+        getPokemonCount: () => pokemonCount, // Public method to get total Pokémon count
         setCurrentOffset: (newOffset) => { currentOffset = newOffset; }, // Public method to set offset
     }
 })();   // End of IIFE pokemonRepository
@@ -203,7 +198,7 @@ const pokemonRoster = document.querySelector('#pokemonList');  // Define contain
 const nextButton = document.querySelector('.next-button');    // Define button calling next Pokémon list page
 const prevButton = document.querySelector('.prev-button');    // Define button calling previous Pokémon list page
 
-// Function rendering a Pokemon list page
+// Function rendering a Pokémon list page
 function renderPage(offset) {
     pokemonRepository.loadPage(offset).then(() => {
         if (!pokemonRoster) {
